@@ -9,31 +9,41 @@ pr:
 pool:
   vmImage: ubuntu-latest
 
-variables:
-  GOBIN:  '$(GOPATH)/bin' # Go binaries path
-  GOROOT: '/usr/local/go1.11' # Go installation path
-  GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
-  modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
-
 steps:
-- script: |
-    mkdir -p '$(GOBIN)'
-    mkdir -p '$(GOPATH)/pkg'
-    mkdir -p '$(modulePath)'
-    shopt -s extglob
-    shopt -s dotglob
-    mv !(gopath) '$(modulePath)'
-    echo '##vso[task.prependpath]$(GOBIN)'
-    echo '##vso[task.prependpath]$(GOROOT)/bin'
-  displayName: 'Set up the Go workspace'
+- task: GoTool@0
+  displayName: Install go v1.18
+  inputs:
+    version: '1.18'
 
-- script: |
-    go version
-    go get -v -t -d ./...
-    if [ -f Gopkg.toml ]; then
-        curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-        dep ensure
-    fi
-    go build -v .
-  workingDirectory: '$(modulePath)'
-  displayName: 'Get dependencies, then build'
+- task: Go@0
+  displayName: Build Wall-e
+  inputs:
+    command: 'build'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/walle/app/'
+- task: Go@0
+  displayName: Test Wall-e
+  inputs:
+    command: 'test'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/walle/app/'
+
+- task: Go@0
+  displayName: Build The Hive
+  inputs:
+    command: 'build'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/theHive/app/'
+- task: Go@0
+  displayName: Test The Hive
+  inputs:
+    command: 'test'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/theHive/app/'
+
+- task: Go@0
+  displayName: Build OrderSupplier
+  inputs:
+    command: 'build'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/orderSupplier/app/'
+- task: Go@0
+  displayName: Test OrderSupplier
+  inputs:
+    command: 'test'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/orderSupplier/app/'
