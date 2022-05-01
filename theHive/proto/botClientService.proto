@@ -1,0 +1,20 @@
+syntax = "proto3";
+package botClientService;
+
+//Point information, for requests and logging of positions
+message Point { 
+    int32 XPosition = 1;
+    int32 YPosition = 2;
+}
+
+//Conformation message at end of client stream(wall-e) to server(hive)
+message MessageRecieved {
+    bool Recieved = 1;
+    int32 NumberOfMessages = 2;
+}
+
+//Service interface for communications between hive-wall-e
+service BotClientService {
+    //Streams updates of each robot position on the grid
+    rpc RegisterCurrentPosition(stream Point) returns (MessageRecieved) {} 
+}
