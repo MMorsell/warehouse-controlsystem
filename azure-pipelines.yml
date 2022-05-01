@@ -23,7 +23,9 @@ steps:
 - task: Go@0
   displayName: Test Wall-e
   inputs:
-    command: 'test'
+    command: 'custom'
+    customCommand: 'test'
+    arguments: './... -v'
     workingDirectory: '$(System.DefaultWorkingDirectory)/walle/app/'
 
 - task: Go@0
@@ -34,7 +36,9 @@ steps:
 - task: Go@0
   displayName: Test The Hive
   inputs:
-    command: 'test'
+    command: 'custom'
+    customCommand: 'test'
+    arguments: './... -v'
     workingDirectory: '$(System.DefaultWorkingDirectory)/theHive/app/'
 
 - task: Go@0
@@ -45,5 +49,7 @@ steps:
 - task: Go@0
   displayName: Test OrderSupplier
   inputs:
-    command: 'test'
+    command: 'custom'
+    customCommand: 'test'
+    arguments: './... -v'
     workingDirectory: '$(System.DefaultWorkingDirectory)/orderSupplier/app/'
