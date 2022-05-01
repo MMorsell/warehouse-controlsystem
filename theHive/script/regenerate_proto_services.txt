@@ -1,0 +1,3 @@
+!You must delete the "filename".pb.go before running command below. example file to delete: "botClientService.pb.go"
+
+protoc --go_out=plugins=grpc:. ./theHive/proto/botClientService.proto
