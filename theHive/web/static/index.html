@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>I am robot</title>
+    </head>
+    <body>
+        <input id="input" type="text" />
+        <pre id="status"></pre>
+        <script>
+            const socket = new WebSocket("ws://localhost:8000/websocketConnection");
+            const status = document.getElementById("status");
+
+            socket.onopen = function () {
+                status.innerHTML += "Status: Connected\n";
+            };
+
+            socket.onmessage = function (e) {
+                console.log(JSON.parse(e.data))
+                status.innerHTML += "Server: " + e.data + "\n";
+            };
+        </script>
+    </body>
+</html>
