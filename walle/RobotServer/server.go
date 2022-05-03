@@ -11,6 +11,7 @@ func main() {
 	if error1 != nil {
 		log.Fatalf("Failed to listen to port 10: %v", error1)
 	}
+
 	grpcServer := new(grpc.Server)
 
 	error2 := grpcServer.Serve(listener)

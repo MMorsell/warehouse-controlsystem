@@ -1,0 +1,15 @@
+syntax = "proto3";
+package main;
+
+option go_package ="./Robot";
+
+message hasReceivedTask{
+  string confirmation = 1;
+}
+message Instructions{
+  repeated int32 instruction = 1;
+}
+service ReceiveTask {
+  //function for Hive to call,
+  rpc ReceiveTask(Instructions) returns (hasReceivedTask) {}
+}
