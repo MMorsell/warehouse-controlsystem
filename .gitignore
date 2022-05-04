@@ -5,4 +5,5 @@
 !**/*.sum
 !**/*.gitignore
 !**/*.html
+!**/*.json
 !**/
