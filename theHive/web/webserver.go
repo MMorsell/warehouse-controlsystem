@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/gorilla/websocket"
+	botClientService "gits-15.sys.kth.se/Gophers/walle/theHive/api"
 	serviceContract "gits-15.sys.kth.se/Gophers/walle/theHive/proto"
 )
 
@@ -17,9 +18,9 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-var webSubPool *[]chan serviceContract.GridPositions
+var webSubPool *[]botClientService.WebSub
 
-func SetupWebServer(subs *[]chan serviceContract.GridPositions) {
+func SetupWebServer(subs *[]botClientService.WebSub) {
 	log.Printf("Starting Web server!")
 
 	webSubPool = subs
@@ -37,47 +38,38 @@ func wsConnection(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Close()
 
-	log.Printf("Received subscribe request from ID: %s", r.Context())
+	log.Printf("Received subscribe request from browser gui")
 
-	// Handle subscribe request
-	fin := make(chan bool)
 	// Save the subscriber stream according to the given client ID
-	channel := make(chan serviceContract.GridPositions, 2)
-	*webSubPool = append(*webSubPool, channel)
-	ctx := r.Context()
-
+	channel := make(chan serviceContract.GridPositions)
+	clientClosedConnection := false
+	sub := botClientService.WebSub{Channel: &channel, ClosedConnection: &clientClosedConnection}
+	*webSubPool = append(*webSubPool, sub)
 	for {
 		select {
-		case update := <-channel:
+
+		case update := <-*sub.Channel:
 			//Convert to json
 			b, err := json.Marshal(update)
 			if err != nil {
 				log.Fatal("encode error:", err)
 			}
 
-			//TODO: Handle client disconnect issue
 			if err = conn.WriteMessage(websocket.TextMessage, b); err != nil {
 				if errors.Is(err, syscall.EPIPE) {
 					// just ignore.
+					clientClosedConnection = true
+					log.Printf("Client Disconnected, removing connection")
 					return
 				} else {
-					// Here is not "broken pipe" error.
+					// Not "broken pipe" error, log message
 					log.Fatal(err)
+					return
 				}
 			}
-			// if err == io.EOF {
-			// 	log.Printf(("Banaaaan"))
-			// }
-			// if err == syscall.EPIPE {
-			// 	log.Printf(("Client forcefully disconnected"))
-			// } else if err != nil {
-			// 	log.Fatal(err)
-			// }
-		case <-fin:
-			log.Printf("Closing stream for client ID: %s", r.Context())
-			return
-		case <-ctx.Done():
-			log.Printf("Client ID %s has disconnected", r.Context())
+
+		case <-r.Context().Done():
+			log.Printf("Client has disconnected")
 			return
 		}
 	}

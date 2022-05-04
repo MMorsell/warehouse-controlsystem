@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
 
@@ -11,12 +10,11 @@ import (
 	"google.golang.org/grpc"
 )
 
-//contains the channel to web browser subscribers
+//contains the subs to web browser subscribers
 //messages are routed from grpc -> websocket -> browser
-var webSubPool []chan serviceContract.GridPositions
+var webSubPool []botClientService.WebSub
 
 func main() {
-	fmt.Println("Hello World!")
 	go webServer.SetupWebServer(&webSubPool)
 	setupGRPCService()
 }

@@ -12,7 +12,16 @@ import (
 
 type Server struct {
 	//Holds all current web instances subscribed to updates
-	WebSubPool *[]chan botClientService.GridPositions
+	WebSubPool *[]WebSub
+}
+
+//A web GUI instance
+type WebSub struct {
+
+	//Relays updates to the web sub
+	Channel *chan botClientService.GridPositions
+	//Cleanup connection from server if true
+	ClosedConnection *bool
 }
 
 //Endpoint designated for robot position updated. This information is later relayed to the webclient interface
@@ -42,8 +51,37 @@ func (s *Server) RegisterCurrentPosition(stream botClientService.BotClientServic
 }
 
 func (s *Server) sendUpdateToSubscribers(position botClientService.GridPositions) {
-	log.Printf("Sending update to clients")
-	for _, sub := range *s.WebSubPool {
-		sub <- position
+	unsubScribe := []int{}
+	for i, sub := range *s.WebSubPool {
+		if *sub.ClosedConnection {
+			unsubScribe = append(unsubScribe, i)
+			continue
+		}
+
+		*sub.Channel <- position
 	}
+
+	s.removeSubscribersFromPool(unsubScribe)
+}
+
+func (s *Server) removeSubscribersFromPool(indexOfPeersToRemove []int) {
+	if len(indexOfPeersToRemove) == 0 {
+		return
+	}
+
+	if len(indexOfPeersToRemove) == len(*s.WebSubPool) {
+		//Remove all connections
+		*s.WebSubPool = []WebSub{}
+		return
+	}
+
+	for i := 0; i < len(indexOfPeersToRemove); i++ {
+		//Faster to replace index with another remaining peer, than removal
+		*s.WebSubPool = replace(*s.WebSubPool, indexOfPeersToRemove[i])
+	}
+}
+
+func replace(s []WebSub, i int) []WebSub {
+	s[i] = s[len(s)-1]
+	return s[:len(s)-1]
 }
