@@ -26,20 +26,21 @@ steps:
     command: 'custom'
     customCommand: 'test'
     arguments: './... -v'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/walle/app/'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/walle/'
 
 - task: Go@0
   displayName: Build The Hive
   inputs:
     command: 'build'
     workingDirectory: '$(System.DefaultWorkingDirectory)/theHive/app/'
+
 - task: Go@0
   displayName: Test The Hive
   inputs:
     command: 'custom'
     customCommand: 'test'
     arguments: './... -v'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/theHive/app/'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/theHive/'
 
 - task: Go@0
   displayName: Build OrderSupplier
@@ -52,4 +53,4 @@ steps:
     command: 'custom'
     customCommand: 'test'
     arguments: './... -v'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/orderSupplier/app/'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/orderSupplier/'
