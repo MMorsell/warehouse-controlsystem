@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"time"
 )
 
 /*
@@ -25,6 +26,7 @@ type Coordinate struct {
 	yCoordinate int
 }
 
+//Constructor doesnt seem to work
 func NewCoordinate(CoordinateX int, CoordinateY int) *Coordinate {
 	Coordinate := new(Coordinate)
 	Coordinate.xCoordinate = CoordinateX
@@ -32,17 +34,18 @@ func NewCoordinate(CoordinateX int, CoordinateY int) *Coordinate {
 	return Coordinate
 }
 
-func (robot *Robot) move(coordinate Coordinate) {
+func (robot *Robot) move(coordinate *Coordinate) {
 	errorMessage := "can not move that far in one method call"
-	if robot.isOkayToMove && (!((coordinate.xCoordinate < 1 || coordinate.xCoordinate > 1) || (coordinate.yCoordinate < 1 || coordinate.yCoordinate > 1))) {
+	if robot.isOkayToMove {
 		robot.PositionX += coordinate.xCoordinate
 		robot.PositionY += coordinate.yCoordinate
+		time.Sleep(time.Second)
 	} else {
 		fmt.Println(errorMessage)
 	}
 }
 
-func (robot *Robot) moveMultiple(listOfCoordinates ...Coordinate) {
+func (robot *Robot) moveMultiple(listOfCoordinates ...*Coordinate) {
 	for i := 0; i < len(listOfCoordinates); i++ {
 		robot.move(listOfCoordinates[i])
 	}
@@ -50,8 +53,25 @@ func (robot *Robot) moveMultiple(listOfCoordinates ...Coordinate) {
 }
 
 func main() {
-	maxX := 100 //To be decided, measurement for width of storage
-	maxY := 100 //To be decided, measurement for height of storage
-	robot := &Robot{true, false, rand.Intn(maxX), rand.Intn(maxY)}
+	var RobotSpawns [76]*Coordinate
+	for i := 0; i < 20; i++ {
+		coordinate := NewCoordinate(1, i+1)
+		RobotSpawns[i] = coordinate
+	}
+	for i := 0; i < 20; i++ {
+		coordinate := NewCoordinate(20, i+1)
+		RobotSpawns[i+20] = coordinate
+	}
+	for i := 1; i < 20; i++ {
+		coordinate := NewCoordinate(i+1, 1)
+		RobotSpawns[i+38] = coordinate
+	}
+	for i := 1; i < 20; i++ {
+		coordinate := NewCoordinate(i+1, 20)
+		RobotSpawns[i+56] = coordinate
+	}
+	spawnPoint := rand.Intn(len(RobotSpawns))
+	robot := &Robot{true, true, RobotSpawns[spawnPoint].xCoordinate, RobotSpawns[spawnPoint].yCoordinate}
 	fmt.Println(robot)
+	robot.move(NewCoordinate(1, 0))
 }
