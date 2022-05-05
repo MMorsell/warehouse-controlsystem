@@ -68,17 +68,6 @@ func (g *Grid) TraversableNeighbours(pos Position) []Position {
 	return neighbours
 }
 
-func insertAt(index int, value uint32, arr []uint32) []uint32 {
-	if index == len(arr) {
-		arr = append(arr, value)
-	} else {
-		// Retain sorted array by duplicating an element and then overwriting
-		arr = append(arr[:index+1], arr[index:]...)
-		arr[index] = value
-	}
-	return arr
-}
-
 func right(pos Position) Position {
 	return Position{pos.x + 1, pos.y, pos.t + 1}
 }
