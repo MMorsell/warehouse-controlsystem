@@ -21,5 +21,4 @@ func TestPriority(t *testing.T) {
 			t.Errorf("Expected %d, but got %d", want, got)
 		}
 	}
-
 }
