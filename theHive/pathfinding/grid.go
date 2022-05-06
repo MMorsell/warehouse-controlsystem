@@ -31,7 +31,7 @@ func (g *Grid) Within(pos Position) bool {
 
 // Obstructed returns true if provided Position is obstructed which is a time-independent property.
 func (g *Grid) Obstructed(pos Position) bool {
-	_, exists := g.obstructed[pos]
+	_, exists := g.obstructed[Position{pos.x, pos.y, 0}]
 	return exists
 }
 
