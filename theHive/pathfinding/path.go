@@ -65,7 +65,7 @@ func constructPath(start Position, goal Position, cameFrom map[Position]Position
 	return path
 }
 
-func reservePath(grid *Grid, path []Position) {
+func ReservePath(grid *Grid, path []Position) {
 	for _, pos := range path {
 		// We need to reserve the actual path but also the next time step to avoid head on collisions.
 		// This is because two agents cannot actually interchange position but must traverse from one coordinate to another
