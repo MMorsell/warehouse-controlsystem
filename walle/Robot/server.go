@@ -1,6 +1,8 @@
 package main
 
 import (
+	RobotService "gits-15.sys.kth.se/Gophers/walle/walle/Robot/api"
+	ProtoContract "gits-15.sys.kth.se/Gophers/walle/walle/Robot/proto"
 	"google.golang.org/grpc"
 	"log"
 	"net"
@@ -11,8 +13,11 @@ func main() {
 	if error1 != nil {
 		log.Fatalf("Failed to listen to port 10: %v", error1)
 	}
+	S := RobotService.Server{}
 
-	grpcServer := new(grpc.Server)
+	grpcServer := grpc.NewServer()
+
+	ProtoContract.RegisterReceiveTaskServiceServer(grpcServer, &S)
 
 	error2 := grpcServer.Serve(listener)
 
