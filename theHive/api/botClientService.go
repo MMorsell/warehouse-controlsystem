@@ -51,6 +51,10 @@ func (s *Server) RegisterCurrentPosition(stream botClientService.BotClientServic
 }
 
 func (s *Server) sendUpdateToSubscribers(position botClientService.GridPositions) {
+	if s.WebSubPool == nil {
+		return
+	}
+
 	unsubScribe := []int{}
 	for i, sub := range *s.WebSubPool {
 		if *sub.ClosedConnection {
