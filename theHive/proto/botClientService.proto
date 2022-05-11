@@ -13,8 +13,14 @@ message MessageRecieved {
     int32 NumberOfMessages = 2;
 }
 
+message GridPositions {
+    string RobotId = 1;
+    int32 XPosition = 2;
+    int32 YPosition = 3;
+}
+
 //Service interface for communications between hive-wall-e
 service BotClientService {
-    //Streams updates of each robot position on the grid
-    rpc RegisterCurrentPosition(stream Point) returns (MessageRecieved) {} 
+    //Streams updates from each robot position on the grid to the hive
+    rpc RegisterCurrentPosition(stream Point) returns (MessageRecieved) {}
 }
