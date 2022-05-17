@@ -2,7 +2,7 @@ package pathfinding
 
 // Position struct defines a space-time position on the grid in the form of (x, y, t) coordinates.
 type Position struct {
-	x, y, t int32
+	X, Y, T int32
 }
 
 type Grid struct {
@@ -26,12 +26,12 @@ func NewGrid(width int32, height int32, obstacles []Position) *Grid {
 // Within returns true if provided Position is contained in the grid
 // Note that positions with obstructions are contained in the grid and return true too.
 func (g *Grid) Within(pos Position) bool {
-	return pos.x >= 0 && pos.x < g.width && pos.y >= 0 && pos.y < g.height
+	return pos.X >= 0 && pos.X < g.width && pos.Y >= 0 && pos.Y < g.height
 }
 
 // Obstructed returns true if provided Position is obstructed which is a time-independent property.
 func (g *Grid) Obstructed(pos Position) bool {
-	_, exists := g.obstructed[Position{pos.x, pos.y, 0}]
+	_, exists := g.obstructed[Position{pos.X, pos.Y, 0}]
 	return exists
 }
 
@@ -69,21 +69,21 @@ func (g *Grid) TraversableNeighbours(pos Position) []Position {
 }
 
 func right(pos Position) Position {
-	return Position{pos.x + 1, pos.y, pos.t + 1}
+	return Position{pos.X + 1, pos.Y, pos.T + 1}
 }
 
 func left(pos Position) Position {
-	return Position{pos.x - 1, pos.y, pos.t + 1}
+	return Position{pos.X - 1, pos.Y, pos.T + 1}
 }
 
 func up(pos Position) Position {
-	return Position{pos.x, pos.y - 1, pos.t + 1}
+	return Position{pos.X, pos.Y - 1, pos.T + 1}
 }
 
 func down(pos Position) Position {
-	return Position{pos.x, pos.y + 1, pos.t + 1}
+	return Position{pos.X, pos.Y + 1, pos.T + 1}
 }
 
 func wait(pos Position) Position {
-	return Position{pos.x, pos.y, pos.t + 1}
+	return Position{pos.X, pos.Y, pos.T + 1}
 }

@@ -2,13 +2,17 @@ package botClientService
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"log"
+	"time"
 
 	"github.com/google/uuid"
 
 	"gits-15.sys.kth.se/Gophers/walle/theHive/pathfinding"
 	botClientService "gits-15.sys.kth.se/Gophers/walle/theHive/proto"
+	serviceContract "gits-15.sys.kth.se/Gophers/walle/walle/Robot/proto"
+	"google.golang.org/grpc"
 )
 
 type Server struct {
@@ -31,14 +35,34 @@ type RobotConnection struct {
 }
 
 func (s *Server) SendInstructionsToTheRobot(moves []pathfinding.Position) error {
+	//Get first robot
+	targetRobot := (*s.AvaliableRobots)[len(*s.AvaliableRobots)-1]
 
-	var targetRobot = *s.AvaliableRobots[:len(*s.AvaliableRobots)-1]
+	//Remove robot from AvaliableRobots
+	*s.AvaliableRobots = (*s.AvaliableRobots)[:len(*s.AvaliableRobots)-1]
 
 	//Create grpc client
+	var conn *grpc.ClientConn
+	time.Sleep(1 * time.Second) //To allow for hive to fully start
+	conn, err := grpc.Dial(fmt.Sprintf(":%s", targetRobot.robotAddress), grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("could not connect: %s", err)
+	}
 
-	//remove from AvaliableRobots
+	defer conn.Close()
+
+	client := serviceContract.NewReceiveTaskServiceClient(conn)
+
+	//convert the information
+	xMoves := make([]int32, len(moves))
+	yMoves := make([]int32, len(moves))
+	for i := 0; i < len(moves); i++ {
+		xMoves = append(xMoves, int32(moves[i].X))
+		yMoves = append(yMoves, int32(moves[i].Y))
+	}
 
 	//Send info
+	client.ReceiveTask(context.Background(), &serviceContract.Instructions{XMove: xMoves, YMove: yMoves})
 	return nil
 }
 
