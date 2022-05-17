@@ -1,5 +1,7 @@
 syntax = "proto3";
-package botClientService;
+package main;
+option go_package="./botClientService";
+
 
 //Point information, for requests and logging of positions
 message Point { 
@@ -13,14 +15,22 @@ message MessageRecieved {
     int32 NumberOfMessages = 2;
 }
 
+//Position of the robot on the grid. 
 message GridPositions {
     string RobotId = 1;
     int32 XPosition = 2;
     int32 YPosition = 3;
 }
 
+
+//Payload returned if robot registration was successful
+message RobotRegistrationSuccess {
+    string RobotId = 1;
+}
+
 //Service interface for communications between hive-wall-e
 service BotClientService {
     //Streams updates from each robot position on the grid to the hive
     rpc RegisterCurrentPosition(stream Point) returns (MessageRecieved) {}
+    rpc RegisterRobot(GridPositions) returns (RobotRegistrationSuccess) {}
 }

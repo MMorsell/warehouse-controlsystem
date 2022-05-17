@@ -12,16 +12,21 @@ import (
 
 type Server struct {
 	//Holds all current web instances subscribed to updates
-	WebSubPool *[]WebSub
+	WebSubPool      *[]WebSub
+	AvaliableRobots *[]RobotConnection
 }
 
 //A web GUI instance
 type WebSub struct {
-
 	//Relays updates to the web sub
 	Channel *chan botClientService.GridPositions
 	//Cleanup connection from server if true
 	ClosedConnection *bool
+}
+
+type RobotConnection struct {
+	robotId      string
+	robotAddress string
 }
 
 //Endpoint designated for robot position updated. This information is later relayed to the webclient interface
@@ -48,6 +53,16 @@ func (s *Server) RegisterCurrentPosition(stream botClientService.BotClientServic
 		nrMessages++
 		s.sendUpdateToSubscribers(botClientService.GridPositions{RobotId: botSessionId, XPosition: point.XPosition, YPosition: point.YPosition})
 	}
+}
+
+//Endpoint designated for robot position updated. This information is later relayed to the webclient interface
+func (s *Server) RegisterRobot(point GridPositions) error {
+	//Get new id for robot
+
+	//Register
+
+	//Return ok with response
+	return nil, nil
 }
 
 func (s *Server) sendUpdateToSubscribers(position botClientService.GridPositions) {
