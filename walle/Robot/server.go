@@ -1,11 +1,17 @@
 package main
 
+func main() {
+
+}
+
+/*
 import (
+	"log"
+	"net"
+
 	RobotService "gits-15.sys.kth.se/Gophers/walle/walle/Robot/api"
 	ProtoContract "gits-15.sys.kth.se/Gophers/walle/walle/Robot/proto"
 	"google.golang.org/grpc"
-	"log"
-	"net"
 )
 
 func main() {
@@ -26,3 +32,4 @@ func main() {
 	}
 
 }
+*/
