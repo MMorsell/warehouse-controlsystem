@@ -49,6 +49,7 @@ func (robot *Robot) moveMultiple(listOfCoordinates ...*Coordinate) {
 
 func main() {
 	var RobotSpawns [76]*Coordinate
+
 	for i := 0; i < 20; i++ {
 		coordinate := NewCoordinate(0, i)
 		RobotSpawns[i] = coordinate
@@ -65,10 +66,10 @@ func main() {
 		coordinate := NewCoordinate(i+1, 19)
 		RobotSpawns[i+58] = coordinate
 	}
+
 	spawnPoint := rand.Intn(len(RobotSpawns))
-	robot := &Robot{true, RobotSpawns[spawnPoint].xCoordinate, RobotSpawns[spawnPoint].yCoordinate, "A"}
+
+	robot := &Robot{true, RobotSpawns[spawnPoint].xCoordinate, RobotSpawns[spawnPoint].yCoordinate, "-1"}
+
 	fmt.Println(robot)
-	for i := 0; i < len(RobotSpawns); i++ {
-		fmt.Println(RobotSpawns[i])
-	}
 }
