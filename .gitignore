@@ -6,4 +6,6 @@
 !**/*.gitignore
 !**/*.html
 !**/*.json
+!**/*.js
+!**/*.css
 !**/

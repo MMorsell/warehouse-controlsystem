@@ -1,0 +1,41 @@
+html,
+body {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+:root {
+    --grid-cols: 1;
+    --grid-rows: 1;
+}
+
+#grid {
+    width: 75vmin;
+    height: 75vmin;
+    min-width: 500px;
+    min-height: 500px;
+    display: grid;
+    gap: 1px;
+    grid-template-rows: repeat(var(--grid-rows), 1fr);
+    grid-template-columns: repeat(var(--grid-cols), 1fr);
+}
+
+
+.cellFree {
+    border: 1px solid black;
+    background: white;
+}
+
+.cellCurrent {
+    border: 2px solid black;
+    background: red;
+}
+
+.cellUsed {
+    border: 1px solid black;
+    background:  rgba(255, 0, 0, 0.3);
+}
