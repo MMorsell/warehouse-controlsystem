@@ -5,8 +5,9 @@ option go_package="./botClientService";
 
 //Point information, for requests and logging of positions
 message Point { 
-    int32 XPosition = 1;
-    int32 YPosition = 2;
+    string RobotId = 1;
+    int32 XPosition = 2;
+    int32 YPosition = 3;
 }
 
 //Conformation message at end of client stream(wall-e) to server(hive)

@@ -4,9 +4,8 @@ import (
 	"context"
 	"io"
 	"log"
-	"math/rand"
-	"strconv"
-	"time"
+
+	"github.com/google/uuid"
 
 	botClientService "gits-15.sys.kth.se/Gophers/walle/theHive/proto"
 )
@@ -33,9 +32,7 @@ type RobotConnection struct {
 //Endpoint designated for robot position updated. This information is later relayed to the webclient interface
 func (s *Server) RegisterCurrentPosition(stream botClientService.BotClientService_RegisterCurrentPositionServer) error {
 	nrMessages := 0
-
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	botSessionId := strconv.Itoa(int(r.Int31n(100)) + 2)
+	botSessionId := ""
 
 	for {
 		point, err := stream.Recv()
@@ -48,6 +45,11 @@ func (s *Server) RegisterCurrentPosition(stream botClientService.BotClientServic
 			})
 		}
 
+		//Set for first message
+		if nrMessages == 1 {
+			botSessionId = point.RobotId
+		}
+
 		if err != nil {
 			return err
 		}
@@ -56,14 +58,21 @@ func (s *Server) RegisterCurrentPosition(stream botClientService.BotClientServic
 	}
 }
 
-//Endpoint designated for robot position updated. This information is later relayed to the webclient interface
+//Endpoint designated for reg. online robots, returns the assigned robot ID
 func (s *Server) RegisterRobot(ctx context.Context, point *botClientService.GridPositions) (*botClientService.RobotRegistrationSuccess, error) {
-	//Get new id for robot
 
+	if s.AvaliableRobots == nil {
+		*s.AvaliableRobots = make([]RobotConnection, 10)
+	}
+	//Get new id for robot
+	uuidWithHyphenFunc := uuid.New()
+	uuid := uuidWithHyphenFunc.String()
 	//Register
+	robot := RobotConnection{robotId: uuid, robotAddress: ""}
+	*s.AvaliableRobots = append(*s.AvaliableRobots, robot)
 
 	//Return ok with response
-	return nil, nil
+	return &botClientService.RobotRegistrationSuccess{RobotId: uuid}, nil
 }
 
 func (s *Server) sendUpdateToSubscribers(position botClientService.GridPositions) {
