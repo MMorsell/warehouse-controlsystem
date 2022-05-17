@@ -30,9 +30,9 @@ type RobotConnection struct {
 	robotAddress string
 }
 
-func (s *Server) SendInstructionsToTheRobot(moves pathfinding.Position) error {
-	//Find closest online robot
-	// var targetRobot = *s.AvaliableRobots[:len(*s.AvaliableRobots)-1];
+func (s *Server) SendInstructionsToTheRobot(moves []pathfinding.Position) error {
+
+	var targetRobot = *s.AvaliableRobots[:len(*s.AvaliableRobots)-1]
 
 	//Create grpc client
 
