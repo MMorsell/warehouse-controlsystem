@@ -1,6 +1,14 @@
 package main
 
+func main() {
+
+}
+
+/*
 import (
+	"log"
+	"net"
+
 	RobotService "gits-15.sys.kth.se/Gophers/walle/walle/Robot/api"
 	ProtoContract "gits-15.sys.kth.se/Gophers/walle/walle/Robot/proto"
 	"google.golang.org/grpc"
@@ -27,3 +35,4 @@ func main() {
 		log.Fatalf("Failed to provide grpc server over port 10: %v", error2)
 	}
 }
+*/

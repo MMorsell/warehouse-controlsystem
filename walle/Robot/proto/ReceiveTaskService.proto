@@ -6,7 +6,8 @@ message HasReceivedTask{
   string Confirmation = 1;
 }
 message Instructions{
-  repeated int32 Instruction = 1;
+  repeated int32 XMove = 1;
+  repeated int32 YMove = 2;
 }
 service ReceiveTaskService{
   //function for Hive to call,
