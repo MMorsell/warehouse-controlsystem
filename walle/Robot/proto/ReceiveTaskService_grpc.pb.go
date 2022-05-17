@@ -49,7 +49,6 @@ func (c *receiveTaskServiceClient) ReceiveTask(ctx context.Context, in *Instruct
 type ReceiveTaskServiceServer interface {
 	//function for Hive to call,
 	ReceiveTask(context.Context, *Instructions) (*HasReceivedTask, error)
-	mustEmbedUnimplementedReceiveTaskServiceServer()
 }
 
 // UnimplementedReceiveTaskServiceServer must be embedded to have forward compatible implementations.

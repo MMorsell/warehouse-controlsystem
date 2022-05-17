@@ -15,10 +15,10 @@ Completing instructions, report back to hive as available
 */
 
 type Robot struct {
-	isAvailable  bool
-	isOkayToMove bool
-	PositionX    int
-	PositionY    int
+	isAvailable bool
+	PositionX   int
+	PositionY   int
+	id          string
 }
 
 type Coordinate struct {
@@ -35,14 +35,9 @@ func NewCoordinate(CoordinateX int, CoordinateY int) *Coordinate {
 }
 
 func (robot *Robot) move(coordinate *Coordinate) {
-	errorMessage := "can not move that far in one method call"
-	if robot.isOkayToMove {
-		robot.PositionX += coordinate.xCoordinate
-		robot.PositionY += coordinate.yCoordinate
-		time.Sleep(time.Second)
-	} else {
-		fmt.Println(errorMessage)
-	}
+	robot.PositionX += coordinate.xCoordinate
+	robot.PositionY += coordinate.yCoordinate
+	time.Sleep(time.Second)
 }
 
 func (robot *Robot) moveMultiple(listOfCoordinates ...*Coordinate) {
@@ -55,23 +50,25 @@ func (robot *Robot) moveMultiple(listOfCoordinates ...*Coordinate) {
 func main() {
 	var RobotSpawns [76]*Coordinate
 	for i := 0; i < 20; i++ {
-		coordinate := NewCoordinate(1, i+1)
+		coordinate := NewCoordinate(0, i)
 		RobotSpawns[i] = coordinate
 	}
 	for i := 0; i < 20; i++ {
-		coordinate := NewCoordinate(20, i+1)
+		coordinate := NewCoordinate(19, i)
 		RobotSpawns[i+20] = coordinate
 	}
-	for i := 1; i < 20; i++ {
-		coordinate := NewCoordinate(i+1, 1)
-		RobotSpawns[i+38] = coordinate
+	for i := 0; i < 18; i++ {
+		coordinate := NewCoordinate(i+1, 0)
+		RobotSpawns[i+40] = coordinate
 	}
-	for i := 1; i < 20; i++ {
-		coordinate := NewCoordinate(i+1, 20)
-		RobotSpawns[i+56] = coordinate
+	for i := 0; i < 18; i++ {
+		coordinate := NewCoordinate(i+1, 19)
+		RobotSpawns[i+58] = coordinate
 	}
 	spawnPoint := rand.Intn(len(RobotSpawns))
-	robot := &Robot{true, true, RobotSpawns[spawnPoint].xCoordinate, RobotSpawns[spawnPoint].yCoordinate}
+	robot := &Robot{true, RobotSpawns[spawnPoint].xCoordinate, RobotSpawns[spawnPoint].yCoordinate, "A"}
 	fmt.Println(robot)
-	robot.move(NewCoordinate(1, 0))
+	for i := 0; i < len(RobotSpawns); i++ {
+		fmt.Println(RobotSpawns[i])
+	}
 }

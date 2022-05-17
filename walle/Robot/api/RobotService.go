@@ -9,11 +9,6 @@ import (
 type Server struct {
 }
 
-func (s *Server) mustEmbedUnimplementedReceiveTaskServiceServer() {
-	//TODO implement me
-	panic("implement me")
-}
-
 func (s *Server) ReceiveTask(ctx context.Context, Instructions *protoContract.Instructions) (*protoContract.HasReceivedTask, error) {
 	log.Printf("Recieved Instructions from The Hive: %s", Instructions)
 	return &protoContract.HasReceivedTask{Confirmation: "Instructions gathered"}, nil

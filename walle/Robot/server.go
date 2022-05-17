@@ -24,5 +24,4 @@ func main() {
 	if error2 != nil {
 		log.Fatalf("Failed to provide grpc server over port 10: %v", error2)
 	}
-
 }
