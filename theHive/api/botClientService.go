@@ -1,35 +1,38 @@
 package botClientService
 
 import (
+	"context"
 	"io"
 	"log"
-	"math/rand"
-	"strconv"
-	"time"
+
+	"github.com/google/uuid"
 
 	botClientService "gits-15.sys.kth.se/Gophers/walle/theHive/proto"
 )
 
 type Server struct {
 	//Holds all current web instances subscribed to updates
-	WebSubPool *[]WebSub
+	WebSubPool      *[]WebSub
+	AvaliableRobots *[]RobotConnection
 }
 
 //A web GUI instance
 type WebSub struct {
-
 	//Relays updates to the web sub
 	Channel *chan botClientService.GridPositions
 	//Cleanup connection from server if true
 	ClosedConnection *bool
 }
 
+type RobotConnection struct {
+	robotId      string
+	robotAddress string
+}
+
 //Endpoint designated for robot position updated. This information is later relayed to the webclient interface
 func (s *Server) RegisterCurrentPosition(stream botClientService.BotClientService_RegisterCurrentPositionServer) error {
 	nrMessages := 0
-
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	botSessionId := strconv.Itoa(int(r.Int31n(100)) + 2)
+	botSessionId := ""
 
 	for {
 		point, err := stream.Recv()
@@ -42,12 +45,34 @@ func (s *Server) RegisterCurrentPosition(stream botClientService.BotClientServic
 			})
 		}
 
+		//Set for first message
+		if nrMessages == 1 {
+			botSessionId = point.RobotId
+		}
+
 		if err != nil {
 			return err
 		}
 		nrMessages++
 		s.sendUpdateToSubscribers(botClientService.GridPositions{RobotId: botSessionId, XPosition: point.XPosition, YPosition: point.YPosition})
 	}
+}
+
+//Endpoint designated for reg. online robots, returns the assigned robot ID
+func (s *Server) RegisterRobot(ctx context.Context, point *botClientService.GridPositions) (*botClientService.RobotRegistrationSuccess, error) {
+
+	if s.AvaliableRobots == nil {
+		*s.AvaliableRobots = make([]RobotConnection, 10)
+	}
+	//Get new id for robot
+	uuidWithHyphenFunc := uuid.New()
+	uuid := uuidWithHyphenFunc.String()
+	//Register
+	robot := RobotConnection{robotId: uuid, robotAddress: ""}
+	*s.AvaliableRobots = append(*s.AvaliableRobots, robot)
+
+	//Return ok with response
+	return &botClientService.RobotRegistrationSuccess{RobotId: uuid}, nil
 }
 
 func (s *Server) sendUpdateToSubscribers(position botClientService.GridPositions) {
