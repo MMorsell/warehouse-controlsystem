@@ -1,12 +1,13 @@
 package botClientService
 
 import (
+	"context"
 	"io"
 	"log"
-	"math/rand"
-	"strconv"
-	"time"
 
+	"github.com/google/uuid"
+
+	"gits-15.sys.kth.se/Gophers/walle/theHive/pathfinding"
 	botClientService "gits-15.sys.kth.se/Gophers/walle/theHive/proto"
 )
 
@@ -29,12 +30,22 @@ type RobotConnection struct {
 	robotAddress string
 }
 
+func (s *Server) SendInstructionsToTheRobot(moves pathfinding.Position) error {
+	//Find closest online robot
+	// var targetRobot = *s.AvaliableRobots[:len(*s.AvaliableRobots)-1];
+
+	//Create grpc client
+
+	//remove from AvaliableRobots
+
+	//Send info
+	return nil
+}
+
 //Endpoint designated for robot position updated. This information is later relayed to the webclient interface
 func (s *Server) RegisterCurrentPosition(stream botClientService.BotClientService_RegisterCurrentPositionServer) error {
 	nrMessages := 0
-
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	botSessionId := strconv.Itoa(int(r.Int31n(100)) + 2)
+	botSessionId := ""
 
 	for {
 		point, err := stream.Recv()
@@ -47,6 +58,11 @@ func (s *Server) RegisterCurrentPosition(stream botClientService.BotClientServic
 			})
 		}
 
+		//Set for first message
+		if nrMessages == 1 {
+			botSessionId = point.RobotId
+		}
+
 		if err != nil {
 			return err
 		}
@@ -55,14 +71,21 @@ func (s *Server) RegisterCurrentPosition(stream botClientService.BotClientServic
 	}
 }
 
-//Endpoint designated for robot position updated. This information is later relayed to the webclient interface
-func (s *Server) RegisterRobot(point GridPositions) error {
-	//Get new id for robot
+//Endpoint designated for reg. online robots, returns the assigned robot ID
+func (s *Server) RegisterRobot(ctx context.Context, point *botClientService.GridPositions) (*botClientService.RobotRegistrationSuccess, error) {
 
+	if s.AvaliableRobots == nil {
+		*s.AvaliableRobots = make([]RobotConnection, 10)
+	}
+	//Get new id for robot
+	uuidWithHyphenFunc := uuid.New()
+	uuid := uuidWithHyphenFunc.String()
 	//Register
+	robot := RobotConnection{robotId: uuid, robotAddress: ""}
+	*s.AvaliableRobots = append(*s.AvaliableRobots, robot)
 
 	//Return ok with response
-	return nil, nil
+	return &botClientService.RobotRegistrationSuccess{RobotId: uuid}, nil
 }
 
 func (s *Server) sendUpdateToSubscribers(position botClientService.GridPositions) {

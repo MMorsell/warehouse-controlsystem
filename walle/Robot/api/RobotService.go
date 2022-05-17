@@ -1,9 +1,10 @@
 package proto
 
 import (
-	protoContract "gits-15.sys.kth.se/Gophers/walle/walle/Robot/proto"
-	"golang.org/x/net/context"
+	"context"
 	"log"
+
+	protoContract "gits-15.sys.kth.se/Gophers/walle/walle/Robot/proto"
 )
 
 type Server struct {
