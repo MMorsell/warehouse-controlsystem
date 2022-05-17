@@ -5,11 +5,13 @@ import (
 	ProtoContract "gits-15.sys.kth.se/Gophers/walle/walle/Robot/proto"
 	"google.golang.org/grpc"
 	"log"
+	"math/rand"
 	"net"
 )
 
 func main() {
-	listener, error1 := net.Listen("tcp", "10")
+	portNumber := rand.Intn(1000) + 6000
+	listener, error1 := net.Listen("tcp", string(portNumber))
 	if error1 != nil {
 		log.Fatalf("Failed to listen to port 10: %v", error1)
 	}
