@@ -74,7 +74,3 @@ func wsConnection(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
-
-func home(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "../web/src")
-}
