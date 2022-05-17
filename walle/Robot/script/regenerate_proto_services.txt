@@ -1,0 +1,1 @@
+use command:  protoc --go-grpc_out=:. --go_out=. .\Robot\proto\ReceiveTaskService.proto
