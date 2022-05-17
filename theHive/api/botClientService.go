@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"gits-15.sys.kth.se/Gophers/walle/theHive/pathfinding"
 	botClientService "gits-15.sys.kth.se/Gophers/walle/theHive/proto"
 )
 
@@ -27,6 +28,18 @@ type WebSub struct {
 type RobotConnection struct {
 	robotId      string
 	robotAddress string
+}
+
+func (s *Server) SendInstructionsToTheRobot(moves pathfinding.Position) error {
+	//Find closest online robot
+	// var targetRobot = *s.AvaliableRobots[:len(*s.AvaliableRobots)-1];
+
+	//Create grpc client
+
+	//remove from AvaliableRobots
+
+	//Send info
+	return nil
 }
 
 //Endpoint designated for robot position updated. This information is later relayed to the webclient interface
