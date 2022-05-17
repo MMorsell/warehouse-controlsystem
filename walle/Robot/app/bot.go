@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
 	"time"
+
+	grpcServer "gits-15.sys.kth.se/Gophers/walle/walle/Robot/api"
 )
 
 /*
@@ -48,28 +51,19 @@ func (robot *Robot) moveMultiple(listOfCoordinates ...*Coordinate) {
 }
 
 func main() {
-	var RobotSpawns [76]*Coordinate
+	//Get random port to use
+	portNumber := rand.Intn(1000) + 6000
 
-	for i := 0; i < 20; i++ {
-		coordinate := NewCoordinate(0, i)
-		RobotSpawns[i] = coordinate
-	}
-	for i := 0; i < 20; i++ {
-		coordinate := NewCoordinate(19, i)
-		RobotSpawns[i+20] = coordinate
-	}
-	for i := 0; i < 18; i++ {
-		coordinate := NewCoordinate(i+1, 0)
-		RobotSpawns[i+40] = coordinate
-	}
-	for i := 0; i < 18; i++ {
-		coordinate := NewCoordinate(i+1, 19)
-		RobotSpawns[i+58] = coordinate
-	}
+	//Setup endpoint, but dont listen to it yet
+	_, listener, grpcServer := grpcServer.InitServer(portNumber)
 
-	spawnPoint := rand.Intn(len(RobotSpawns))
-
-	robot := &Robot{true, RobotSpawns[spawnPoint].xCoordinate, RobotSpawns[spawnPoint].yCoordinate, "-1"}
+	//Init and register the robot as avaliable to the hive
+	robot := initRobotAndRegisterAtHive(portNumber)
 
 	fmt.Println(robot)
+
+	//Listen to payloads from the hive
+	if err := grpcServer.Serve(listener); err != nil {
+		log.Fatalf("Failed to serve: %s", err)
+	}
 }

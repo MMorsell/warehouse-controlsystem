@@ -2,25 +2,31 @@ package main
 
 import (
 	"context"
-	Proto "gits-15.sys.kth.se/Gophers/walle/theHive/proto"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"fmt"
 	"log"
 	"math/rand"
+
+	hiveProto "gits-15.sys.kth.se/Gophers/walle/theHive/proto"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
-func main() {
+func initRobotAndRegisterAtHive(thisRobotPortNumber int) Robot {
+	thisRobotsEndpointAddress := fmt.Sprintf(":%d", thisRobotPortNumber)
+
+	//Connect to hive
 	var connection *grpc.ClientConn
-	connection, err := grpc.Dial(":100", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	connection, err := grpc.Dial(":9738", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Fatalf("could not connect on port 100: %s", err)
+		log.Fatalf("could not connect on port 8000: %s", err)
 	}
 	defer connection.Close()
 
-	client := Proto.NewBotClientServiceClient(connection)
+	//Generate client to hive
+	client := hiveProto.NewBotClientServiceClient(connection)
 
+	//Generate local robot
 	var RobotSpawns [76]*Coordinate
-
 	for i := 0; i < 20; i++ {
 		coordinate := NewCoordinate(0, i)
 		RobotSpawns[i] = coordinate
@@ -37,18 +43,26 @@ func main() {
 		coordinate := NewCoordinate(i+1, 19)
 		RobotSpawns[i+58] = coordinate
 	}
-
 	spawnPoint := rand.Intn(len(RobotSpawns))
+	robot := &Robot{
+		true,
+		RobotSpawns[spawnPoint].xCoordinate,
+		RobotSpawns[spawnPoint].yCoordinate,
+		"-1"}
 
-	robot := &Robot{true, RobotSpawns[spawnPoint].xCoordinate, RobotSpawns[spawnPoint].yCoordinate, "-1"}
+	robotRequestPayload := hiveProto.RegisterRobotPayload{
+		XPosition:            int32(robot.PositionY),
+		YPosition:            int32(robot.PositionY),
+		RobotEndpointAddress: thisRobotsEndpointAddress}
 
-	GridPositions := Proto.GridPositions{RobotId: string(robot.id), XPosition: int32(robot.PositionY), YPosition: int32(robot.PositionY)}
-
-	response, err := client.RegisterRobot(context.Background(), &GridPositions)
+	//Register local robot to hive
+	response, err := client.RegisterRobot(context.Background(), &robotRequestPayload)
 	if err != nil {
 		log.Fatalf("Error when calling RegisterRobot: %s", err)
 	}
 
-	log.Printf("Response from the Server: %s", response.RobotId)
+	log.Printf("Success! Setting robot ID to: %s", response.RobotId)
 
+	robot.id = response.RobotId
+	return *robot
 }

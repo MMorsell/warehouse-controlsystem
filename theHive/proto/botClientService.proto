@@ -23,6 +23,13 @@ message GridPositions {
     int32 YPosition = 3;
 }
 
+//Payload to be sent to the hive when a robot is first online
+message RegisterRobotPayload {
+    int32 XPosition = 1;
+    int32 YPosition = 2;
+    string RobotEndpointAddress = 3;
+}
+
 
 //Payload returned if robot registration was successful
 message RobotRegistrationSuccess {
@@ -33,5 +40,5 @@ message RobotRegistrationSuccess {
 service BotClientService {
     //Streams updates from each robot position on the grid to the hive
     rpc RegisterCurrentPosition(stream Point) returns (MessageRecieved) {}
-    rpc RegisterRobot(GridPositions) returns (RobotRegistrationSuccess) {}
+    rpc RegisterRobot(RegisterRobotPayload) returns (RobotRegistrationSuccess) {}
 }

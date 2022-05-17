@@ -96,16 +96,16 @@ func (s *Server) RegisterCurrentPosition(stream botClientService.BotClientServic
 }
 
 //Endpoint designated for reg. online robots, returns the assigned robot ID
-func (s *Server) RegisterRobot(ctx context.Context, point *botClientService.GridPositions) (*botClientService.RobotRegistrationSuccess, error) {
+func (s *Server) RegisterRobot(ctx context.Context, robotPayload *botClientService.RegisterRobotPayload) (*botClientService.RobotRegistrationSuccess, error) {
 
-	if s.AvaliableRobots == nil {
-		*s.AvaliableRobots = make([]RobotConnection, 10)
+	if (*s).AvaliableRobots == nil {
+		(*s).AvaliableRobots = &[]RobotConnection{}
 	}
 	//Get new id for robot
 	uuidWithHyphenFunc := uuid.New()
 	uuid := uuidWithHyphenFunc.String()
 	//Register
-	robot := RobotConnection{robotId: uuid, robotAddress: ""}
+	robot := RobotConnection{robotId: uuid, robotAddress: robotPayload.RobotEndpointAddress}
 	*s.AvaliableRobots = append(*s.AvaliableRobots, robot)
 
 	//Return ok with response
