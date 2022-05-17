@@ -1,6 +1,7 @@
 package botClientService
 
 import (
+	"context"
 	"io"
 	"log"
 	"math/rand"
@@ -56,7 +57,7 @@ func (s *Server) RegisterCurrentPosition(stream botClientService.BotClientServic
 }
 
 //Endpoint designated for robot position updated. This information is later relayed to the webclient interface
-func (s *Server) RegisterRobot(point GridPositions) error {
+func (s *Server) RegisterRobot(ctx context.Context, point *botClientService.GridPositions) (*botClientService.RobotRegistrationSuccess, error) {
 	//Get new id for robot
 
 	//Register
