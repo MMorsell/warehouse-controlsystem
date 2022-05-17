@@ -10,7 +10,7 @@ const refCount = new Array(cols * rows).fill(0);
 
 let agents = new Map();
 
-function advancePath(instruction) {
+export function advancePath(instruction) {
     const id = instruction.id;
     const x = instruction.x;
     const y = instruction.y;
@@ -85,11 +85,6 @@ async function mock() {
         await new Promise(r => setTimeout(r, 500));
     }
 }
-
-await mock()
-clearPath("1")
-await new Promise(r => setTimeout(r, 1000));
-clearPath("2")
 
 
 

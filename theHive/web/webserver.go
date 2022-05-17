@@ -26,7 +26,6 @@ func SetupWebServer(subs *[]botClientService.WebSub) {
 	webSubPool = subs
 	http.HandleFunc("/websocketConnection", wsConnection)
 	http.Handle("/", http.FileServer(http.Dir("../web/src/")))
-	http.Handle("/css/", http.FileServer(http.Dir("../web/src/css")))
 	http.ListenAndServe(":8000", nil)
 }
 
