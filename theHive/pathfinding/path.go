@@ -18,7 +18,7 @@ func FindPath(grid *Grid, start Position, goal Position) []Position {
 	costSoFar := make(map[Position]int32)
 	cameFrom := make(map[Position]Position)
 
-	costSoFar[start] = 0
+	costSoFar[start] = start.T
 	cameFrom[start] = start
 
 	q := &priorityQueue{}
