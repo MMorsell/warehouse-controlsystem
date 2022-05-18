@@ -30,16 +30,13 @@ type WebSub struct {
 }
 
 type RobotConnection struct {
-	robotId      string
+	RobotId      string
 	robotAddress string
+	XPosition    int
+	YPosition    int
 }
 
-func (s *Server) SendInstructionsToTheRobot(moves []pathfinding.Position) error {
-	//Get first robot
-	targetRobot := (*s.AvaliableRobots)[len(*s.AvaliableRobots)-1]
-
-	//Remove robot from AvaliableRobots
-	*s.AvaliableRobots = (*s.AvaliableRobots)[:len(*s.AvaliableRobots)-1]
+func (s *Server) SendInstructionsToTheRobot(targetRobot RobotConnection, moves []pathfinding.Position) error {
 
 	//Create grpc client
 	var conn *grpc.ClientConn
@@ -63,6 +60,7 @@ func (s *Server) SendInstructionsToTheRobot(moves []pathfinding.Position) error 
 
 	//Send info
 	client.ReceiveTask(context.Background(), &serviceContract.Instructions{XMove: xMoves, YMove: yMoves})
+	log.Printf("Hive sent move instructions to %s", targetRobot.RobotId)
 	return nil
 }
 
@@ -105,7 +103,7 @@ func (s *Server) RegisterRobot(ctx context.Context, robotPayload *botClientServi
 	uuidWithHyphenFunc := uuid.New()
 	uuid := uuidWithHyphenFunc.String()
 	//Register
-	robot := RobotConnection{robotId: uuid, robotAddress: robotPayload.RobotEndpointAddress}
+	robot := RobotConnection{RobotId: uuid, robotAddress: robotPayload.RobotEndpointAddress, XPosition: int(robotPayload.XPosition), YPosition: int(robotPayload.YPosition)}
 	*s.AvaliableRobots = append(*s.AvaliableRobots, robot)
 
 	//Return ok with response
