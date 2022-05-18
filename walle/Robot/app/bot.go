@@ -51,6 +51,9 @@ func (robot *Robot) moveMultiple(listOfCoordinates ...*Coordinate) {
 }
 
 func main() {
+
+	time.Sleep(time.Second * 1)
+
 	//Get random port to use
 	portNumber := rand.Intn(1000) + 6000
 
