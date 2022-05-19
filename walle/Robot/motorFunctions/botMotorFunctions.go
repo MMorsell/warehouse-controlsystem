@@ -109,7 +109,7 @@ func (r *Robot) reRegisterRobot() {
 	robotRequestPayload := hiveProto.RegisterRobotPayload{
 		XPosition:            int32(r.PositionY),
 		YPosition:            int32(r.PositionY),
-		RobotEndpointAddress: fmt.Sprint(r.PortNumber)}
+		RobotEndpointAddress: fmt.Sprintf(":%d", r.PortNumber)}
 
 	//Register local robot to hive
 	response, err := client.RegisterRobot(context.Background(), &robotRequestPayload)
