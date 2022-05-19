@@ -50,9 +50,11 @@ func (s *Server) SendInstructionsToTheRobot(targetRobot RobotConnection, moves [
 
 	client := serviceContract.NewReceiveTaskServiceClient(conn)
 
-	//convert the information
-	xMoves := make([]int32, 0)
-	yMoves := make([]int32, 0)
+	//Include robot start position so the GUI is updated correctly
+	xMoves := []int32{int32(targetRobot.XPosition)}
+	yMoves := []int32{int32(targetRobot.YPosition)}
+
+	//convert the move information
 	for i := 0; i < len(moves); i++ {
 		xMoves = append(xMoves, int32(moves[i].X))
 		yMoves = append(yMoves, int32(moves[i].Y))
