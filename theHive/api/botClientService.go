@@ -36,7 +36,15 @@ type RobotConnection struct {
 	YPosition    int
 }
 
-func (s *Server) SendInstructionsToTheRobot(targetRobot RobotConnection, moves []pathfinding.Position) error {
+type Waypoint struct {
+	Pos        XY
+	DropOffPos XY
+}
+type XY struct {
+	X, Y int
+}
+
+func (s *Server) SendInstructionsToTheRobot(targetRobot RobotConnection, moves []pathfinding.Position, waypoint Waypoint) error {
 
 	//Create grpc client
 	var conn *grpc.ClientConn
@@ -59,6 +67,10 @@ func (s *Server) SendInstructionsToTheRobot(targetRobot RobotConnection, moves [
 		xMoves = append(xMoves, int32(moves[i].X))
 		yMoves = append(yMoves, int32(moves[i].Y))
 	}
+	time.Sleep(time.Second * 2)
+	//Send point instructions (where the robot is supposed to travel to)
+	s.sendUpdateToSubscribers(botClientService.GridPositions{RobotId: targetRobot.RobotId, XPosition: int32(waypoint.Pos.X), YPosition: int32(waypoint.Pos.Y), IsTargetPoint: true})
+	s.sendUpdateToSubscribers(botClientService.GridPositions{RobotId: targetRobot.RobotId, XPosition: int32(waypoint.DropOffPos.X), YPosition: int32(waypoint.DropOffPos.Y), IsTargetPoint: true})
 
 	//Send info to bot
 	client.ReceiveTask(context.Background(), &serviceContract.Instructions{XMove: xMoves, YMove: yMoves})

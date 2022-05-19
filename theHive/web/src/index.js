@@ -1,5 +1,5 @@
 import { Agent } from "./Agent.js"
-import { moveAgent, clearAgentPath} from "./actions.js"
+import { moveAgent, clearAgentPath, drawFuturePoint} from "./actions.js"
 import { makeGrid } from "./grid.js";
 
 const rows = 20;
@@ -35,6 +35,21 @@ function XYtoLinear(x, y) {
     const linearVersion = x + (y * cols);
     console.debug(`converting x '${x}' and '${y}' to linear value '${linearVersion}'`)
     return linearVersion
+}
+
+export function drawFuturePointAction(instruction) {
+    const id = instruction.id;
+    const x = instruction.x;
+    const y = instruction.y;
+    const index = XYtoLinear(x, y);
+    
+    if (!agents.has(id)) {
+        agents.set(id, new Agent(id));
+    }
+
+    const agent = agents.get(id);
+
+    drawFuturePoint(agent, index)
 }
 
 makeGrid(rows, cols);
