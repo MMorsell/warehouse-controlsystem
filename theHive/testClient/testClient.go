@@ -48,5 +48,7 @@ func main() {
 }
 
 func randomPoint(r *rand.Rand) *serviceContract.Point {
-	return &serviceContract.Point{XPosition: r.Int31(), YPosition: r.Int31()}
+	x := rand.Intn(19-0) + 0
+	y := rand.Intn(19-0) + 0
+	return &serviceContract.Point{XPosition: int32(x), YPosition: int32(y)}
 }
