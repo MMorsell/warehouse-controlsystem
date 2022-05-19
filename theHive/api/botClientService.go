@@ -67,6 +67,8 @@ func (s *Server) SendInstructionsToTheRobot(targetRobot RobotConnection, moves [
 		log.Fatalf("could not send task to wall-e bot: %s", err)
 		return err
 	}
+	log.Printf("Sent Instructions to robot %s on port %s, registered as unavaliable", targetRobot.RobotId, targetRobot.robotAddress)
+
 	return nil
 }
 
@@ -112,6 +114,8 @@ func (s *Server) RegisterRobot(ctx context.Context, robotPayload *botClientServi
 	//Register
 	robot := RobotConnection{RobotId: uuid, robotAddress: robotPayload.RobotEndpointAddress, XPosition: int(robotPayload.XPosition), YPosition: int(robotPayload.YPosition)}
 	*s.AvaliableRobots = append(*s.AvaliableRobots, robot)
+
+	log.Printf("Robot %s on port %s, registered as avaliable", robot.RobotId, robot.robotAddress)
 
 	//Return ok with response
 	return &botClientService.RobotRegistrationSuccess{RobotId: uuid}, nil
