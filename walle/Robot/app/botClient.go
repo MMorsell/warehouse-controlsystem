@@ -36,7 +36,7 @@ func initRobotAndRegisterAtHive(thisRobotPortNumber int) motorFunctions.Robot {
 		PortNumber:  thisRobotPortNumber}
 
 	robotRequestPayload := hiveProto.RegisterRobotPayload{
-		XPosition:            int32(robot.PositionY),
+		XPosition:            int32(robot.PositionX),
 		YPosition:            int32(robot.PositionY),
 		RobotEndpointAddress: thisRobotsEndpointAddress}
 
