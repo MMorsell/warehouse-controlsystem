@@ -9,11 +9,15 @@ socket.onopen = function () {
 
 socket.onmessage = function (e) {
     const newMessage = JSON.parse(e.data);
-    console.log(newMessage)
+    console.debug(newMessage)
     
     if (newMessage.XPosition === -1 && newMessage.YPosition === -1) {
         clearPath(newMessage.RobotId);
         return
     }
-    advancePath({id: newMessage.RobotId, x: newMessage.XPosition, y: newMessage.YPosition})
+
+    advancePath({
+        id: newMessage.RobotId, 
+        x:  newMessage.XPosition === undefined ? 0 : newMessage.XPosition, 
+        y: newMessage.YPosition === undefined ? 0 : newMessage.YPosition})
 };
