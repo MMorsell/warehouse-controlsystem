@@ -17,31 +17,127 @@
             }
         },
         {
-            "name": "Launch wall-e bot",
+            "name": "Launch wall-e bot1",
             "type": "go",
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}/walle/Robot/app"
         },
         {
-            "name": "Launch fake client",
+            "name": "Launch wall-e bot2",
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceFolder}/theHive/testClient"
-        }
+            "program": "${workspaceFolder}/walle/Robot/app"
+        },
+        {
+            "name": "Launch wall-e bot3",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/walle/Robot/app"
+        },
+        {
+            "name": "Launch wall-e bot4",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/walle/Robot/app"
+        },
+        {
+            "name": "Launch wall-e bot5",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/walle/Robot/app"
+        },
+        {
+            "name": "Launch wall-e bot6",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/walle/Robot/app"
+        },
+        {
+            "name": "Launch wall-e bot7",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/walle/Robot/app"
+        },
+        {
+            "name": "Launch wall-e bot8",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/walle/Robot/app"
+        },
+        {
+            "name": "Launch wall-e bot9",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/walle/Robot/app"
+        },
+        {
+            "name": "Launch wall-e bot10",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/walle/Robot/app"
+        },
+        {
+            "name": "Launch wall-e bot11",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/walle/Robot/app"
+        },
+        {
+            "name": "Launch wall-e bot12",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/walle/Robot/app"
+        },
+        {
+            "name": "Launch wall-e bot13",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/walle/Robot/app"
+        },
+        {
+            "name": "Launch wall-e bot14",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/walle/Robot/app"
+        },
+        {
+            "name": "Launch wall-e bot15",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/walle/Robot/app"
+        },
 
     ],
     "compounds": [
         {
             "name": "Server + Client",
-            "configurations": ["Launch Hive", "Launch wall-e bot"],
+            "configurations": ["Launch Hive", "Launch wall-e bot1"],
             "stopAll": true
         },
         {
-            "name": "Server + fake",
-            "configurations": ["Launch Hive", "Launch fake client"],
+            "name": "Server + 3 Client",
+            "configurations": ["Launch Hive", "Launch wall-e bot1", "Launch wall-e bot2", "Launch wall-e bot3"],
             "stopAll": true
+        },
+        {
+            "name": "Chaos",
+            "configurations": ["Launch Hive", "Launch wall-e bot1", "Launch wall-e bot2", "Launch wall-e bot3", "Launch wall-e bot4", "Launch wall-e bot5", "Launch wall-e bot6", "Launch wall-e bot7", "Launch wall-e bot8", "Launch wall-e bot9", "Launch wall-e bot10", "Launch wall-e bot11", "Launch wall-e bot12", "Launch wall-e bot13", "Launch wall-e bot14", "Launch wall-e bot15"],
+            "stopAll": true,
         }
     ]
 }
