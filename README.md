@@ -1,4 +1,7 @@
-# Walle [![Build Status](https://dev.azure.com/martinmorsell18/Current%20Projects/_apis/build/status/Gophers.walle?branchName=refs%2Fpull%2F1%2Fmerge)](https://dev.azure.com/martinmorsell18/Current%20Projects/_build/latest?definitionId=8&branchName=refs%2Fpull%2F1%2Fmerge)
+# Walle [![Build Status](https://dev.azure.com/martinmorsell18/Current%20Projects/_apis/build/status/Gophers.walle?branchName=master)](https://dev.azure.com/martinmorsell18/Current%20Projects/_build/latest?definitionId=8&branchName=master)
+
+## Azure DevOps
+This repository is connected to external services in "Azure DevOps". Specifically, all resources will be built and test-cases will be run automatically after each commit. This improves the stability of the codebase, since passing tests and successful build is required to merge into the Master branch. 
 
 
 ## Description:
