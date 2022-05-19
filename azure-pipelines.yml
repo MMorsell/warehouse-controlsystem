@@ -19,14 +19,14 @@ steps:
   displayName: Build Wall-e
   inputs:
     command: 'build'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/walle/app/'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/walle/Robot/app'
 - task: Go@0
   displayName: Test Wall-e
   inputs:
     command: 'custom'
     customCommand: 'test'
     arguments: './... -v'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/walle/'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/walle/Robot/'
 
 - task: Go@0
   displayName: Build The Hive

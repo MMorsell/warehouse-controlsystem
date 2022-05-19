@@ -5,7 +5,7 @@ import (
 )
 
 func heuristic(a Position, b Position) int32 {
-	return abs(a.x-b.x) + abs(a.y-b.y)
+	return abs(a.X-b.X) + abs(a.Y-b.Y)
 }
 
 func abs(x int32) int32 {
@@ -18,7 +18,7 @@ func FindPath(grid *Grid, start Position, goal Position) []Position {
 	costSoFar := make(map[Position]int32)
 	cameFrom := make(map[Position]Position)
 
-	costSoFar[start] = 0
+	costSoFar[start] = start.T
 	cameFrom[start] = start
 
 	q := &priorityQueue{}
@@ -28,7 +28,7 @@ func FindPath(grid *Grid, start Position, goal Position) []Position {
 	for q.Len() > 0 {
 		current := heap.Pop(q).(*item).value
 
-		if current.x == goal.x && current.y == goal.y {
+		if current.X == goal.X && current.Y == goal.Y {
 
 			// A bug may appear here with time, but I'm not sure.
 			// Since we do not know time of arrival we must check time here too actually
@@ -38,7 +38,7 @@ func FindPath(grid *Grid, start Position, goal Position) []Position {
 			// Conclusion: might be a bug here unsure, requires testing.
 
 			// Add the time for how long it took so we know in the future when it will arrive.
-			return constructPath(start, Position{goal.x, goal.y, costSoFar[current]}, cameFrom)
+			return constructPath(start, Position{goal.X, goal.Y, costSoFar[current]}, cameFrom)
 		}
 
 		for _, neighbour := range grid.TraversableNeighbours(current) {
@@ -83,7 +83,7 @@ func ReservePath(grid *Grid, path []Position) {
 		// . # # x x .
 		// . . . . . .
 		grid.Reserve(pos)
-		grid.Reserve(Position{pos.x, pos.y, pos.t + 1}) // Also reserve the time spot after.
+		grid.Reserve(Position{pos.X, pos.Y, pos.T + 1}) // Also reserve the time spot after.
 	}
 }
 

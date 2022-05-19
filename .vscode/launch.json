@@ -21,7 +21,7 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceFolder}/walle/app"
+            "program": "${workspaceFolder}/walle/Robot/app"
         },
         {
             "name": "Launch fake client",
@@ -36,7 +36,6 @@
         {
             "name": "Server + Client",
             "configurations": ["Launch Hive", "Launch wall-e bot"],
-            "preLaunchTask": "${defaultBuildTask}",
             "stopAll": true
         },
         {

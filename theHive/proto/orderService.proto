@@ -1,0 +1,9 @@
+syntax = "proto3";
+package orderService;
+
+//Service interface for communications between hive-orderService
+
+service OrderService {
+    //Register a new route
+    rpc RegisterNewRoute(stream Point) returns (MessageRecieved) {}
+}
