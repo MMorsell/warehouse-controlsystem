@@ -15,7 +15,7 @@ export function advancePath(instruction) {
     const x = instruction.x;
     const y = instruction.y;
     const index = XYtoLinear(x, y);
-
+    
     if (!agents.has(id)) {
         agents.set(id, new Agent(id));
     }
@@ -32,7 +32,9 @@ export function clearPath(id) {
 }
 
 function XYtoLinear(x, y) {
-    return x + (y * cols);
+    const linearVersion = x + (y * cols);
+    console.debug(`converting x '${x}' and '${y}' to linear value '${linearVersion}'`)
+    return linearVersion
 }
 
 makeGrid(rows, cols);

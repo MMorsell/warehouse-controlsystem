@@ -107,9 +107,9 @@ func (r *Robot) reRegisterRobot() {
 	client := hiveProto.NewBotClientServiceClient(connection)
 
 	robotRequestPayload := hiveProto.RegisterRobotPayload{
-		XPosition:            int32(r.PositionY),
+		XPosition:            int32(r.PositionX),
 		YPosition:            int32(r.PositionY),
-		RobotEndpointAddress: fmt.Sprint(r.PortNumber)}
+		RobotEndpointAddress: fmt.Sprintf(":%d", r.PortNumber)}
 
 	//Register local robot to hive
 	response, err := client.RegisterRobot(context.Background(), &robotRequestPayload)
@@ -141,7 +141,8 @@ func GetRandomSpawnPoint() (int, int) {
 		coordinate := newCoordinate(i+1, 19)
 		RobotSpawns[i+58] = coordinate
 	}
-	spawnPoint := rand.Intn(len(RobotSpawns))
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	spawnPoint := r.Intn(len(RobotSpawns))
 
 	return RobotSpawns[spawnPoint].xCoordinate, RobotSpawns[spawnPoint].yCoordinate
 }

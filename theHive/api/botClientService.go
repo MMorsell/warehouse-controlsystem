@@ -50,9 +50,11 @@ func (s *Server) SendInstructionsToTheRobot(targetRobot RobotConnection, moves [
 
 	client := serviceContract.NewReceiveTaskServiceClient(conn)
 
-	//convert the information
-	xMoves := make([]int32, 0)
-	yMoves := make([]int32, 0)
+	//Include robot start position so the GUI is updated correctly
+	xMoves := []int32{int32(targetRobot.XPosition)}
+	yMoves := []int32{int32(targetRobot.YPosition)}
+
+	//convert the move information
 	for i := 0; i < len(moves); i++ {
 		xMoves = append(xMoves, int32(moves[i].X))
 		yMoves = append(yMoves, int32(moves[i].Y))
@@ -65,6 +67,8 @@ func (s *Server) SendInstructionsToTheRobot(targetRobot RobotConnection, moves [
 		log.Fatalf("could not send task to wall-e bot: %s", err)
 		return err
 	}
+	log.Printf("Sent Instructions to robot %s on port %s, registered as unavaliable", targetRobot.RobotId, targetRobot.robotAddress)
+
 	return nil
 }
 
@@ -110,6 +114,8 @@ func (s *Server) RegisterRobot(ctx context.Context, robotPayload *botClientServi
 	//Register
 	robot := RobotConnection{RobotId: uuid, robotAddress: robotPayload.RobotEndpointAddress, XPosition: int(robotPayload.XPosition), YPosition: int(robotPayload.YPosition)}
 	*s.AvaliableRobots = append(*s.AvaliableRobots, robot)
+
+	log.Printf("Robot %s on port %s, registered as avaliable", robot.RobotId, robot.robotAddress)
 
 	//Return ok with response
 	return &botClientService.RobotRegistrationSuccess{RobotId: uuid}, nil
