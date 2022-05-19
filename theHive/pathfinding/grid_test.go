@@ -26,7 +26,7 @@ func TestWithin(t *testing.T) {
 	}
 
 	for _, tc := range cases {
-		t.Run(fmt.Sprintf("(x=%d,y=%d,t=%d) with (width=%d,height=%d)", tc.pos.x, tc.pos.y, tc.pos.t, grid.width, grid.height), func(t *testing.T) {
+		t.Run(fmt.Sprintf("(x=%d,y=%d,t=%d) with (width=%d,height=%d)", tc.pos.X, tc.pos.Y, tc.pos.T, grid.width, grid.height), func(t *testing.T) {
 			got := grid.Within(tc.pos)
 			if tc.want != got {
 				t.Errorf("Expected '%t', but got '%t'", tc.want, got)
@@ -50,7 +50,7 @@ func TestNeighboursNoObstructions(t *testing.T) {
 	}
 
 	for _, tc := range cases {
-		t.Run(fmt.Sprintf("Neighbours for (x=%d,y=%d,t=%d)", tc.pos.x, tc.pos.y, tc.pos.t), func(t *testing.T) {
+		t.Run(fmt.Sprintf("Neighbours for (x=%d,y=%d,t=%d)", tc.pos.X, tc.pos.Y, tc.pos.T), func(t *testing.T) {
 			got := grid.TraversableNeighbours(tc.pos)
 			if !sliceHasSameElements(got, tc.want) {
 				t.Errorf("Expected %v, but got %v", tc.want, got)
