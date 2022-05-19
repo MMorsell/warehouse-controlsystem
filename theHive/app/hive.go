@@ -81,6 +81,11 @@ func orderService(s *botClientService.Server) {
 		orders := append(orders, <-ch...)
 		newTime := time.Now().Unix() - t
 		for i := len(*s.AvaliableRobots) - 1; i >= 0; i-- {
+
+			if len(orders) == 0 {
+				break //Do nothing more if there is not enough orders to be fulfilled
+			}
+
 			targetRobot := (*s.AvaliableRobots)[i]
 
 			//Remove robot from AvaliableRobots
