@@ -21,6 +21,8 @@ message GridPositions {
     string RobotId = 1;
     int32 XPosition = 2;
     int32 YPosition = 3;
+    //If position is target or move point
+    bool isTargetPoint = 4;
 }
 
 //Payload to be sent to the hive when a robot is first online

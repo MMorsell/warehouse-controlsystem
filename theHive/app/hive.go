@@ -61,7 +61,7 @@ func orderService(s *botClientService.Server) {
 	go func() {
 		for {
 			nrOrders := rand.Intn(4-1) + 1
-			interval := rand.Intn(21-10) + 10
+			interval := rand.Intn(21 - 10)
 			ch <- generateOrders(nrOrders)
 			time.Sleep(time.Second * time.Duration(interval))
 		}
@@ -110,7 +110,11 @@ func orderService(s *botClientService.Server) {
 
 			totalPath := append(path, dropOffPath...)
 
-			s.SendInstructionsToTheRobot(targetRobot, totalPath)
+			s.SendInstructionsToTheRobot(targetRobot, totalPath,
+				botClientService.Waypoint{
+					Pos:        botClientService.XY{X: order.pos.x, Y: order.pos.y},
+					DropOffPos: botClientService.XY{X: order.dropOffPos.x, Y: order.dropOffPos.y},
+				})
 		}
 	}
 }
