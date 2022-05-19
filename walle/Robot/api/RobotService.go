@@ -6,17 +6,21 @@ import (
 	"log"
 	"net"
 
+	motorFunctions "gits-15.sys.kth.se/Gophers/walle/walle/Robot/motorFunctions"
 	protoContract "gits-15.sys.kth.se/Gophers/walle/walle/Robot/proto"
 	"google.golang.org/grpc"
 )
 
 type Server struct {
 	address string
+	Robot   *motorFunctions.Robot
 }
 
 func (s *Server) ReceiveTask(ctx context.Context, Instructions *protoContract.Instructions) (*protoContract.HasReceivedTask, error) {
 	log.Printf("Recieved Instructions from The Hive: %s", Instructions)
-	return &protoContract.HasReceivedTask{Confirmation: "Instructions gathered"}, nil
+
+	go s.Robot.HandleInstructions(Instructions)
+	return &protoContract.HasReceivedTask{Confirmation: "Instructions recieved"}, nil
 }
 
 //Inits the robot's own grpc server endpoint, but you have to listen to the response from the listener

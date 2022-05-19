@@ -2,7 +2,6 @@ package botClientService
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"log"
 	"time"
@@ -13,6 +12,7 @@ import (
 	botClientService "gits-15.sys.kth.se/Gophers/walle/theHive/proto"
 	serviceContract "gits-15.sys.kth.se/Gophers/walle/walle/Robot/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 type Server struct {
@@ -41,7 +41,7 @@ func (s *Server) SendInstructionsToTheRobot(targetRobot RobotConnection, moves [
 	//Create grpc client
 	var conn *grpc.ClientConn
 	time.Sleep(1 * time.Second) //To allow for hive to fully start
-	conn, err := grpc.Dial(fmt.Sprintf(":%s", targetRobot.robotAddress), grpc.WithInsecure())
+	conn, err := grpc.Dial(targetRobot.robotAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("could not connect: %s", err)
 	}
@@ -51,45 +51,50 @@ func (s *Server) SendInstructionsToTheRobot(targetRobot RobotConnection, moves [
 	client := serviceContract.NewReceiveTaskServiceClient(conn)
 
 	//convert the information
-	xMoves := make([]int32, len(moves))
-	yMoves := make([]int32, len(moves))
+	xMoves := make([]int32, 0)
+	yMoves := make([]int32, 0)
 	for i := 0; i < len(moves); i++ {
 		xMoves = append(xMoves, int32(moves[i].X))
 		yMoves = append(yMoves, int32(moves[i].Y))
 	}
 
-	//Send info
+	//Send info to bot
 	client.ReceiveTask(context.Background(), &serviceContract.Instructions{XMove: xMoves, YMove: yMoves})
-	log.Printf("Hive sent move instructions to %s", targetRobot.RobotId)
+
+	if err != nil {
+		log.Fatalf("could not send task to wall-e bot: %s", err)
+		return err
+	}
 	return nil
 }
 
 //Endpoint designated for robot position updated. This information is later relayed to the webclient interface
 func (s *Server) RegisterCurrentPosition(stream botClientService.BotClientService_RegisterCurrentPositionServer) error {
 	nrMessages := 0
-	botSessionId := ""
+	robotId := ""
 
 	for {
 		point, err := stream.Recv()
 		if err == io.EOF {
-			log.Printf("Total nr of messages: %d, robot ID %s", nrMessages, botSessionId)
+			log.Printf("Total nr of messages: %d, robot ID %s", nrMessages, robotId)
 			log.Printf("Closing connection")
+
+			//Sending remove request to web clients
+			s.sendUpdateToSubscribers(botClientService.GridPositions{RobotId: robotId, XPosition: -1, YPosition: -1})
+
+			//Close stream to robot
 			return stream.SendAndClose(&botClientService.MessageRecieved{
 				Recieved:         true,
 				NumberOfMessages: int32(nrMessages),
 			})
 		}
-
-		//Set for first message
-		if nrMessages == 1 {
-			botSessionId = point.RobotId
-		}
+		robotId = point.RobotId //We need to save the id, since when bot closes the connection this information will not be avaliable
 
 		if err != nil {
 			return err
 		}
 		nrMessages++
-		s.sendUpdateToSubscribers(botClientService.GridPositions{RobotId: botSessionId, XPosition: point.XPosition, YPosition: point.YPosition})
+		s.sendUpdateToSubscribers(botClientService.GridPositions{RobotId: point.RobotId, XPosition: point.XPosition, YPosition: point.YPosition})
 	}
 }
 
